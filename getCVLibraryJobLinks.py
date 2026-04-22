@@ -14,5 +14,8 @@ def getAllCVLibraryJobsURLs(driver):
         if href and "/job/" in href and href not in all_links:
             all_links.append(href)
 
+    all_links = all_links[:5]  # get first 5 only
+
+    all_links = ["https://www.cv-library.co.uk/job/225012243/Senior-Software-Developer-Java-Remote-First?hlkw=software-developer&sid=f4075da8-c184-4f64-aaf9-aa62643b9c64"]
     print(f"Found {len(all_links)} job links")
     return all_links
