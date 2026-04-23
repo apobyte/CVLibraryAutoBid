@@ -16,6 +16,6 @@ def getAllCVLibraryJobsURLs(driver):
 
     all_links = all_links[:5]  # get first 5 only
 
-    all_links = ["https://www.cv-library.co.uk/job/225012243/Senior-Software-Developer-Java-Remote-First?hlkw=software-developer&sid=f4075da8-c184-4f64-aaf9-aa62643b9c64"]
+    all_links = ["https://www.cv-library.co.uk/job/224998408/Software-Developer?hlkw=software-developer&sid=34ab695f-bc21-4708-bf00-2f2ad30b4497"]
     print(f"Found {len(all_links)} job links")
     return all_links

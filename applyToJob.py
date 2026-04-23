@@ -5,6 +5,7 @@ from openai import OpenAI
 import time
 import os
 import re
+from dotenv import load_dotenv
 
 COVER_LETTER = """I am excited to apply for this software developer role. I have strong experience in 
 full-stack development and am eager to contribute to your team.
@@ -15,9 +16,14 @@ Kind regards,
 Benjamin Davies"""
 
 RESUMES_BASE_PATH = "C:/Resumes"
-OPENAI_API_KEY = "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"  # <-- change this
 
-client = OpenAI(api_key=OPENAI_API_KEY)
+# Load .env file
+load_dotenv(override=True)
+
+# Get the API key from environment
+openai_api_key = os.getenv("OPENAI_API_KEY")
+
+client = OpenAI(api_key=openai_api_key)
 
 def getCompanyName(driver):
     try:
@@ -49,17 +55,16 @@ def answerAllQuestionsWithAI(questions):
 Answer each yes/no question below. Reply ONLY with a JSON array of answers like: ["yes", "no", "yes"]
 
 Rules:
-- Right to work in UK = yes
-- Commute questions = no (this is a remote job)
-- Experience questions = yes (assume the candidate has the experience)
-- Availability questions = yes
+- If asked about technical experience, respond with = yes
+- If asked about commuting, respond with = no (I am seeking a fully remote position and am unable to commute.)
+- If asked about legal qualifications to work, respond with = yes (I am legally qualified to work in the UK)
 
 Questions:
 {questions_text}
 
 Reply with ONLY a JSON array, nothing else. Example: ["yes", "no", "yes"]"""
 
-    print(f"  Sending to AI:\n{questions_text}")  # debug: confirm questions are sent
+    print(f"Sending to AI:\n{questions_text}")  # debug: confirm questions are sent
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
