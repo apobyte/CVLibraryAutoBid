@@ -67,7 +67,7 @@ Reply with ONLY a JSON array, nothing else. Example: ["yes", "no", "yes"]"""
     print(f"Sending to AI:\n{questions_text}")  # debug: confirm questions are sent
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4.1-nano",
         messages=[{"role": "user", "content": prompt}],  # prompt contains all questions
         max_tokens=50
     )
