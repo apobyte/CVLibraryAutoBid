@@ -117,10 +117,10 @@ with open("job_links.txt", "w") as f:
         f.write(link + "\n")
 print("Saved job links to job_links.txt")
 
-for i, link in enumerate(job_links, 1):
-    print(f"\n--- Job {i}/{len(job_links)} ---")
-    applyToJob(driver, link)
-    time.sleep(2)
+# for i, link in enumerate(job_links, 1):
+#     print(f"\n--- Job {i}/{len(job_links)} ---")
+#     applyToJob(driver, link)
+#     time.sleep(2)
 
-driver.quit()
-print("\nDone! All applications submitted.")
+# driver.quit()
+# print("\nDone! All applications submitted.")
