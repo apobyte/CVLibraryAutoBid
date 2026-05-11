@@ -3,6 +3,24 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import math
+import requests
+import os
+
+# Bid Platform User Info
+user_email = "joshua.ryan.uk@outlook.com"
+user_days = 30
+
+def getAppliedCompanyNames(email, days):
+    server_url = os.getenv("BIT_PLATFORM_SERVER_URL")
+
+    response = requests.get(
+        f"{server_url}/api/bids/get-companies-by-days",
+        params={
+            "email": email,
+            "days": days
+        }
+    )
+    return response.json()
 
 def getAllCVLibraryJobsURLs(driver):
     BASE_URL = "https://www.cv-library.co.uk/remote-software-engineer-jobs?distance=750&perpage=100&posted=7&us=1"
@@ -32,7 +50,10 @@ def getAllCVLibraryJobsURLs(driver):
     total_pages = max(1, math.ceil(total_jobs / 100))
     print(f"Total pages to scrape: {total_pages}")
 
-    all_links = []
+    all_links = set()
+
+    applied_company_names = getAppliedCompanyNames(user_email, user_days)
+    print(f"Total applied company names: {applied_company_names}")
 
     for page in range(1, total_pages + 1):
         url = f"{BASE_URL}&page={page}"
@@ -40,14 +61,19 @@ def getAllCVLibraryJobsURLs(driver):
         driver.get(url)
 
         wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "h2.job__title")))
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.job__main")))
 
         found = 0
-        for a in driver.find_elements(By.CSS_SELECTOR, "h2.job__title a"):
-            href = a.get_attribute("href")
-            if href and href not in all_links:
-                all_links.append(href)
-                found += 1
+        for job_main in driver.find_elements(By.CSS_SELECTOR, "div.job__main"):
+            try:
+                company_name = job_main.find_element(By.CSS_SELECTOR, "a.job__company-link").text
+                href = job_main.find_element(By.CSS_SELECTOR, "h2.job__title a").get_attribute("href")
+                if company_name and company_name not in applied_company_names:
+                    if href and href not in all_links:
+                        all_links.add(href)
+                        found += 1
+            except Exception as e:
+                print(f"Skipping job card: {e}")
 
         print(f"  Found {found} jobs on page {page}")
 
